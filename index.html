@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthguard</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="app">
+        <!-- Global Navigation Bar -->
+        <nav class="top-nav glass-card"
+            style="margin-bottom: 2rem; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; border-radius: 20px;">
+            <div class="logo">
+                <a href="index.html" style="text-decoration: none;">
+                    <h2 style="color: #1e2b4f; margin: 0;"><i class="fas fa-hospital-user"></i> Healthguard</h2>
+                </a>
+                <small style="color: #475569; font-weight: 500;">Your Trusted Healthcare Companion</small>
+            </div>
+
+            <!-- Navigation Links -->
+            <div class="nav-links" style="display: flex; gap: 2rem; font-weight: 800; font-size: 1.05rem;">
+                <a href="index.html" style="text-decoration: none; color: #1e2b4f; transition: 0.3s;"
+                    onmouseover="this.style.color='#2563eb'" onmouseout="this.style.color='#1e2b4f'">Home</a>
+                <a href="#" style="text-decoration: none; color: #475569; transition: 0.3s;"
+                    onmouseover="this.style.color='#2563eb'" onmouseout="this.style.color='#475569'">About</a>
+                <a href="#" onclick="showTermsConditions(); return false;" style="text-decoration: none; color: #475569; transition: 0.3s;"
+                    onmouseover="this.style.color='#2563eb'" onmouseout="this.style.color='#475569'">Terms & Conditions</a>
+                <a href="#" style="text-decoration: none; color: #475569; transition: 0.3s;"
+                    onmouseover="this.style.color='#2563eb'" onmouseout="this.style.color='#475569'">Account</a>
+            </div>
+        </nav>
+
+        <!-- ************ LOGIN / REGISTER VIEW (default) ************ -->
+        <div id="authView" class="auth-container glass-card">
+            <!-- Header Section -->
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <h1 style="margin-bottom: 0.5rem; font-size: 2.5rem; color: #1e2b4f;"><i class="fas fa-heartbeat"></i> Healthguard</h1>
+                <p style="color: #475569; font-size: 1.1rem; margin: 0;">Your Complete Healthcare Companion</p>
+                <p style="color: #94a3b8; font-size: 0.95rem; margin-top: 0.5rem;"><i class="fas fa-shield-alt"></i> Secure • Private • Trusted</p>
+            </div>
+
+            <!-- User Type Selection with Better Visual Design -->
+            <div class="auth-tabs" style="background: rgba(15, 23, 42, 0.05); padding: 1rem; border-radius: 20px; margin-bottom: 2.5rem;">
+                <div class="auth-tab active" data-tab="patient" style="flex: 1; text-align: center; padding: 1.2rem;">
+                    <i class="fas fa-user-circle" style="font-size: 1.8rem; color: #2563eb; display: block; margin-bottom: 0.5rem;"></i>
+                    <strong>Patient</strong>
+                    <p style="font-size: 0.85rem; color: #666; margin-top: 0.3rem;">Access healthcare services</p>
+                </div>
+                <div class="auth-tab" data-tab="doctor" style="flex: 1; text-align: center; padding: 1.2rem;">
+                    <i class="fas fa-user-md" style="font-size: 1.8rem; color: #666; display: block; margin-bottom: 0.5rem;"></i>
+                    <strong style="color: #666;">Doctor</strong>
+                    <p style="font-size: 0.85rem; color: #666; margin-top: 0.3rem;">Manage your practice</p>
+                </div>
+            </div>
+
+            <!-- Patient auth forms -->
+            <div id="patientAuth" class="auth-form active">
+                <div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+                    <button class="btn-outline" id="patientLoginTab" style="flex: 1; background: #dbeafe; color: #2563eb; border: none;">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
+                    </button>
+                    <button class="btn-outline" id="patientRegisterTab" style="flex: 1;">
+                        <i class="fas fa-user-plus"></i> Create Account
+                    </button>
+                </div>
+                <!-- Patient Login -->
+                <form id="patientLoginForm"
+                    onsubmit="event.preventDefault(); document.getElementById('patientLoginBtn').click();">
+                    <h3 style="margin-bottom: 1.5rem; text-align: center; color: #1e2b4f;">Welcome Back</h3>
+                    <input type="email" id="patientLoginEmail" placeholder="📧 Enter your email" autocomplete="username" required>
+                    <input type="password" id="patientLoginPassword" placeholder="🔐 Enter your password" autocomplete="current-password" required>
+                    <button type="button" id="patientLoginBtn" style="width: 100%; background: #2563eb; font-size: 1.05rem; font-weight: 600; padding: 0.9rem;">
+                        <i class="fas fa-sign-in-alt"></i> Sign In to Healthguard
+                    </button>
+                    <p style="text-align: center; color: #666; margin-top: 1rem; font-size: 0.9rem;">
+                        Don't have an account? <span onclick="document.getElementById('patientRegisterTab').click();" style="color: #2563eb; cursor: pointer; font-weight: 600;">Register here</span>
+                    </p>
+                </form>
+                <!-- Patient Register (hidden by default) -->
+                <form id="patientRegisterForm" style="display: none;"
+                    onsubmit="event.preventDefault(); document.getElementById('patientRegisterBtn').click();">
+                    <h3 style="margin-bottom: 1.5rem; text-align: center; color: #1e2b4f;">Create Your Account</h3>
+                    <div style="background: #eff6ff; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; border-left: 4px solid #2563eb;">
+                        <p style="margin: 0; color: #1e3a8a; font-size: 0.9rem;"><i class="fas fa-info-circle"></i> Please provide accurate information for better healthcare</p>
+                    </div>
+                    <input type="text" id="regFullName" placeholder="👤 Full Name" autocomplete="name" required>
+                    <select id="regGender" autocomplete="sex" required>
+                        <option value="">👥 Select Gender</option>
+                        <option>Male</option>
+                        <option>Female</option>
+                        <option>Other</option>
+                    </select>
+                    <input type="number" id="regAge" placeholder="🎂 Age" min="1" max="120" required>
+                    <input type="tel" id="regPhone" placeholder="📱 Phone Number" autocomplete="tel" required>
+                    <input type="email" id="regEmail" placeholder="📧 Email Address" autocomplete="email" required>
+                    <input type="password" id="regPassword" placeholder="🔐 Create Password" autocomplete="new-password" required>
+                    <input type="tel" id="regEmergency" placeholder="🚨 Emergency Contact" autocomplete="tel" required>
+                    <button type="button" id="patientRegisterBtn" style="width: 100%; background: #2563eb; font-size: 1.05rem; font-weight: 600; padding: 0.9rem;">
+                        <i class="fas fa-check-circle"></i> Create Account
+                    </button>
+                    <p style="text-align: center; color: #666; margin-top: 1rem; font-size: 0.9rem;">
+                        Already have an account? <span onclick="document.getElementById('patientLoginTab').click();" style="color: #2563eb; cursor: pointer; font-weight: 600;">Sign in here</span>
+                    </p>
+                </form>
+            </div>
+
+            <!-- Doctor auth forms -->
+            <div id="doctorAuth" class="auth-form">
+                <div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+                    <button class="btn-outline" id="doctorLoginTab" style="flex: 1; background: #dbeafe; color: #2563eb; border: none;">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
+                    </button>
+                    <button class="btn-outline" id="doctorRegisterTab" style="flex: 1;">
+                        <i class="fas fa-user-plus"></i> Register
+                    </button>
+                </div>
+                <!-- Doctor Login -->
+                <form id="doctorLoginForm"
+                    onsubmit="event.preventDefault(); document.getElementById('doctorLoginBtn').click();">
+                    <h3 style="margin-bottom: 1.5rem; text-align: center; color: #1e2b4f;">Doctor Portal</h3>
+                    <input type="email" id="doctorLoginEmail" placeholder="📧 Enter your email" autocomplete="username" required>
+                    <input type="password" id="doctorLoginPassword" placeholder="🔐 Enter your password" autocomplete="current-password" required>
+                    <button type="button" id="doctorLoginBtn" style="width: 100%; background: #2563eb; font-size: 1.05rem; font-weight: 600; padding: 0.9rem;">
+                        <i class="fas fa-sign-in-alt"></i> Sign In as Doctor
+                    </button>
+                    <p style="text-align: center; color: #666; margin-top: 1rem; font-size: 0.9rem;">
+                        Not registered? <span onclick="document.getElementById('doctorRegisterTab').click();" style="color: #2563eb; cursor: pointer; font-weight: 600;">Register your practice</span>
+                    </p>
+                </form>
+                <!-- Doctor Register -->
+                <form id="doctorRegisterForm" style="display: none;"
+                    onsubmit="event.preventDefault(); document.getElementById('doctorRegisterBtn').click();">
+                    <h3 style="margin-bottom: 1.5rem; text-align: center; color: #1e2b4f;">Register Your Practice</h3>
+                    <div style="background: #eff6ff; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; border-left: 4px solid #2563eb;">
+                        <p style="margin: 0; color: #1e3a8a; font-size: 0.9rem;"><i class="fas fa-info-circle"></i> Verify your medical credentials for patient trust</p>
+                    </div>
+                    <input type="text" id="docFullName" placeholder="👨‍⚕️ Full Name" autocomplete="name" required>
+                    <input type="text" id="docSpecialization" placeholder="🏥 Specialization (e.g., Cardiologist)" required>
+                    <input type="number" id="docExperience" placeholder="📊 Years of Experience" min="0" required>
+                    <input type="tel" id="docPhone" placeholder="📱 Phone Number" autocomplete="tel" required>
+                    <input type="email" id="docEmail" placeholder="📧 Professional Email" autocomplete="email" required>
+                    <input type="password" id="docPassword" placeholder="🔐 Create Password" autocomplete="new-password" required>
+                    <input type="text" id="docAvailable" placeholder="⏰ Available Hours (e.g., Mon-Fri 9AM-5PM)" required>
+                    <button type="button" id="doctorRegisterBtn" style="width: 100%; background: #2563eb; font-size: 1.05rem; font-weight: 600; padding: 0.9rem;">
+                        <i class="fas fa-check-circle"></i> Complete Registration
+                    </button>
+                    <p style="text-align: center; color: #666; margin-top: 1rem; font-size: 0.9rem;">
+                        Already registered? <span onclick="document.getElementById('doctorLoginTab').click();" style="color: #2563eb; cursor: pointer; font-weight: 600;">Sign in here</span>
+                    </p>
+                </form>
+            </div>
+
+            <!-- Demo Notice -->
+            <div style="background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%); padding: 1rem; border-radius: 12px; margin-top: 2.5rem; border-left: 4px solid #f59e0b;">
+                <p style="margin: 0; text-align: center; color: #92400e; font-size: 0.9rem;">
+                    <i class="fas fa-flask"></i> <strong>Demo Mode:</strong> All data is stored locally in your browser • No external servers • Your privacy is protected
+                </p>
+            </div>
+        </div>
+
+        <!-- ************ LOADING ANIMATION ************ -->
+        <div id="loadingOverlay" class="loading-overlay hide">
+            <div class="loading-spinner-container" style="position: relative;">
+                <div class="loading-spinner"></div>
+                <h3 id="loadingText" style="color: #1e2b4f; margin-top: 1.8rem; font-size: 1.2rem; font-weight: 600;">Processing your request...</h3>
+                <p style="color: #666; margin-top: 0.5rem; font-size: 0.9rem;">Securing your authentication</p>
+            </div>
+        </div>
+
+        <!-- ************ PATIENT DASHBOARD ************ -->
+        <div id="patientDashboard" class="glass-card hide">
+            <div class="dashboard-header">
+                <h2>👋 Welcome, <span id="patientName"></span></h2>
+                <button id="patientLogout">Logout</button>
+            </div>
+            <div class="slide-nav">
+                <button class="slide-tab active" data-target="slide-find-doctor">1. Find a Doctor</button>
+                <button class="slide-tab" data-target="slide-messages">2. Messages & Appointments</button>
+                <button class="slide-tab" data-target="slide-medicines">3. Medicine Reminders</button>
+                <button class="slide-tab" data-target="slide-health">4. My Health & Profile</button>
+            </div>
+
+            <div class="dashboard-slides-container">
+
+                <!-- SLIDE 1: FIND A DOCTOR -->
+                <div id="slide-find-doctor" class="dashboard-slide active-slide">
+                    <div style="display: flex; flex-direction: column; gap: 2rem;">
+
+                        <!-- Health Info / Schemes Banner -->
+                        <div class="feature-card"
+                            style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-left: 5px solid #3b82f6;">
+                            <h3 style="color: #1e3a8a;"><i class="fas fa-bullhorn" style="color: #2563eb;"></i>
+                                Important Health Schemes & Info</h3>
+                            <div class="schemes-scroll-container">
+                                <div class="schemes-scroll-wrapper">
+                                    <a href="https://igod.gov.in/organization/WNe83XQBYNG-XPnvjOsx/SPMA/list"
+                                        target="_blank"
+                                        style="background: white; padding: 1rem; border-radius: 12px; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: block;">
+                                        <strong style="color: #2563eb; font-size: 1.1rem;">🔹 India Govt Schemes Portal
+                                            ↗</strong>
+                                        <p style="color: #475569; font-size: 0.9rem; margin-top: 0.3rem;">View all published
+                                            schemes by the government of India</p>
+                                    </a>
+                                    <a href="https://pmjay.gov.in/" target="_blank"
+                                        style="background: white; padding: 1rem; border-radius: 12px; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: block;">
+                                        <strong style="color: #2563eb; font-size: 1.1rem;">🔹 PM-JAY (Ayushman Bharat)
+                                            ↗</strong>
+                                        <p style="color: #475569; font-size: 0.9rem; margin-top: 0.3rem;">₹5 lakh cover per
+                                            family & Free treatment in govt hospitals</p>
+                                    </a>
+                                    <a href="https://nhm.gov.in/index1.php?lang=1&level=1&sublinkid=1319&lid=477"
+                                        target="_blank"
+                                        style="background: white; padding: 1rem; border-radius: 12px; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: block;">
+                                        <strong style="color: #2563eb; font-size: 1.1rem;">🔹 AB-HWCs (Health & Wellness)
+                                            ↗</strong>
+                                        <p style="color: #475569; font-size: 0.9rem; margin-top: 0.3rem;">Preventive & promotive health services at village centers</p>
+                                    </a>
+                                    <a href="https://www.jansuraksha.gov.in/"
+                                        target="_blank"
+                                        style="background: white; padding: 1rem; border-radius: 12px; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: block;">
+                                        <strong style="color: #2563eb; font-size: 1.1rem;">🔹 PMJJBY (Life Insurance)
+                                            ↗</strong>
+                                        <p style="color: #475569; font-size: 0.9rem; margin-top: 0.3rem;">Low-cost life insurance with death benefits coverage</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Spacer row for the half-width Consultation card -->
+                        <div class="grid-2">
+                            <!-- Doctor Consultation Card -->
+                            <div class="feature-card"
+                                style="box-shadow: 0 10px 30px rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.2);">
+                                <h3><i class="fas fa-stethoscope"></i> Consult a Doctor</h3>
+                                <p style="margin-bottom: 1rem; color: #475569;">Search for specialists and book
+                                    appointments
+                                    directly.</p>
+                                <select id="issueSelect">
+                                    <option>General Physician</option>
+                                    <option>Cardiologist</option>
+                                    <option>Dermatologist</option>
+                                    <option>Pediatrician</option>
+                                </select>
+                                <button id="showDoctorsBtn"
+                                    style="width: 100%; margin-top: 0.5rem; background: #2563eb;">Find Doctors</button>
+                                <div id="doctorListContainer"
+                                    style="margin-top: 1rem; max-height: 250px; overflow-y: auto;"></div>
+                            </div>
+
+                            <!-- Placeholder graphic/info side -->
+                            <div
+                                style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 2rem; opacity: 0.8;">
+                                <img src="https://cdn-icons-png.flaticon.com/512/3209/3209074.png" alt="Doctor Graphic"
+                                    style="width: 150px; margin-bottom: 1rem; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1));">
+                                <h3 style="color: #1e2b4f; margin-bottom: 0.5rem;">Access Top Specialists instantly</h3>
+                                <p style="color: #475569;">Our platform connects you with verified doctors for immediate
+                                    online consultation or clinic visits.</p>
+                            </div>
+                        </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- SLIDE 2: MESSAGES & APPOINTMENTS -->
+                <div id="slide-messages" class="dashboard-slide">
+                    <div class="grid-2" style="grid-template-columns: 1fr;">
+                        <div class="feature-card">
+                            <h3><i class="fas fa-comments"></i> Active Consultations</h3>
+                            <p style="margin-bottom: 1rem; color: #475569;">Message the doctors whose appointments have
+                                been accepted.</p>
+                            <div id="patientActiveChatsContainer">
+                                <p style="opacity: 0.7;">No active chats yet. Book a doctor first!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 3: MEDICINE REMINDERS -->
+                <div id="slide-medicines" class="dashboard-slide">
+                    <div style="display: flex; flex-direction: column; gap: 2rem;">
+                        <!-- Add Medicine Form -->
+                        <div class="feature-card" style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-left: 5px solid #3b82f6;">
+                            <h3 style="color: #1e3a8a;"><i class="fas fa-plus-circle" style="color: #2563eb;"></i> Add New Medicine</h3>
+                            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                                <input type="text" id="reminderName" placeholder="Medicine Name (e.g., Aspirin, Vitamin D)">
+                                <div style="display: flex; gap: 1rem;">
+                                    <input type="time" id="reminderTime" style="flex: 1;">
+                                    <input type="number" id="reminderDosage" placeholder="Dosage (e.g., 500mg)" style="flex: 1;">
+                                </div>
+                                <textarea id="reminderNotes" placeholder="Notes (e.g., Take with food, Take before bed)" style="height: 80px; resize: none; font-family: 'Inter', sans-serif;"></textarea>
+                                <button id="addReminderBtn" style="width: 100%; background: #2563eb; font-size: 1.1rem; padding: 1rem;"><i class="fas fa-check"></i> Add Medicine</button>
+                            </div>
+                        </div>
+
+                        <!-- Active Reminders List -->
+                        <div class="feature-card">
+                            <h3 style="margin-bottom: 1.5rem; color: #1e2b4f;"><i class="fas fa-pills" style="color: #2563eb;"></i> Your Medicines</h3>
+                            <div id="reminderList" style="display: flex; flex-direction: column; gap: 1rem;">
+                                <!-- Reminders will be rendered here -->
+                            </div>
+                            <p id="noRemindersMsg" style="text-align: center; color: #999; padding: 2rem;">No medicines added yet. Start by adding your first medicine above!</p>
+                        </div>
+
+                        <!-- Upcoming Reminders -->
+                        <div class="feature-card" style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-left: 5px solid #3b82f6;">
+                            <h3 style="color: #1e3a8a; margin-bottom: 1rem;"><i class="fas fa-clock" style="color: #2563eb;"></i> Today's Schedule</h3>
+                            <div id="upcomingReminders" style="display: flex; flex-direction: column; gap: 0.8rem;">
+                                <p style="text-align: center; color: #666;">No reminders scheduled for today</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 4: MY HEALTH & PROFILE -->
+                <div id="slide-health" class="dashboard-slide">
+                    <div class="grid-2">
+                        <!-- Profile Card -->
+                        <div class="feature-card">
+                            <h3><i class="fas fa-user"></i> Profile</h3>
+                            <div id="patientProfileInfo" class="profile-info"></div>
+                            <button id="editPatientProfile" class="btn-outline"
+                                style="margin-top: 0.5rem;">Edit</button>
+                        </div>
+
+                        <!-- Emergency Button Card -->
+                        <div class="feature-card">
+                            <h3><i class="fas fa-ambulance"></i> Emergency</h3>
+                            <button class="emergency-btn" id="emergencyBtn">🚨 SOS EMERGENCY</button>
+                            <div id="emergencyInfo" style="margin-top: 1rem;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ************ DOCTOR DASHBOARD ************ -->
+        <div id="doctorDashboard" class="glass-card hide">
+            <div class="dashboard-header">
+                <h2>👨‍⚕️ Dr. <span id="doctorName"></span></h2>
+                <button id="doctorLogout">Logout</button>
+            </div>
+            <div class="dashboard-grid">
+                <!-- Appointment Requests -->
+                <div class="feature-card">
+                    <h3><i class="fas fa-calendar-check"></i> Appointment Requests</h3>
+                    <div id="appointmentRequestsList"></div>
+                </div>
+                <!-- Patient List -->
+                <div class="feature-card">
+                    <h3><i class="fas fa-users"></i> My Patients</h3>
+                    <div id="patientListDoctor"></div>
+                </div>
+                <!-- Profile Card -->
+                <div class="feature-card">
+                    <h3><i class="fas fa-id-card"></i> Profile</h3>
+                    <div id="doctorProfileInfo" class="profile-info"></div>
+                    <button id="editDoctorProfile" class="btn-outline">Edit</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ************ TERMS & CONDITIONS PAGE ************ -->
+        <div id="termsConditionsView" class="glass-card hide" style="max-width: 1000px; margin: 2rem auto; padding: 3rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h1 style="color: #1e2b4f; margin: 0;"><i class="fas fa-scroll"></i> Terms & Conditions</h1>
+                <button id="closeTerms" onclick="hideTermsConditions()" style="background: #e5e7eb; color: #1e2b4f; border-radius: 50%; width: 40px; height: 40px; font-size: 1.2rem;">✕</button>
+            </div>
+
+            <div class="terms-content">
+                <p style="color: #666; font-size: 0.95rem; margin-bottom: 2rem;">Last Updated: February 25, 2026</p>
+
+                <!-- Section 1 -->
+                <div class="terms-section">
+                    <h2 style="color: #1e2b4f; margin-top: 2rem; margin-bottom: 1rem;"><i class="fas fa-check-circle" style="color: #2563eb;"></i> 1. Acceptance of Terms</h2>
+                    <p>By accessing and using Healthguard, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service. Healthguard reserves the right to make changes to these terms and conditions at any time without notice.</p>
+                </div>
+
+                <!-- Section 2 -->
+                <div class="terms-section">
+                    <h2 style="color: #1e2b4f; margin-top: 2rem; margin-bottom: 1rem;"><i class="fas fa-check-circle" style="color: #2563eb;"></i> 2. Use License</h2>
+                    <p>Permission is granted to temporarily download one copy of the materials (information or software) on Healthguard for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:</p>
+                    <ul style="margin-left: 2rem; color: #666;">
+                        <li>Modify or copy the materials</li>
+                        <li>Use the materials for any commercial purpose or for any public display</li>
+                        <li>Attempt to decompile or reverse engineer any software contained on Healthguard</li>
+                        <li>Remove any copyright or other proprietary notations from the materials</li>
+                        <li>Transfer the materials to another person or "mirror" the materials on any other server</li>
+                    </ul>
+                </div>
+
+                <!-- Section 3 -->
+                <div class="terms-section">
+                    <h2 style="color: #1e2b4f; margin-top: 2rem; margin-bottom: 1rem;"><i class="fas fa-check-circle" style="color: #2563eb;"></i> 3. Disclaimer</h2>
+                    <p>The materials on Healthguard are provided on an 'as is' basis. Healthguard makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.</p>
+                </div>
+
+                <!-- Section 4 -->
+                <div class="terms-section">
+                    <h2 style="color: #1e2b4f; margin-top: 2rem; margin-bottom: 1rem;"><i class="fas fa-check-circle" style="color: #2563eb;"></i> 4. Medical Disclaimer</h2>
+                    <p>Healthguard provides healthcare services and information for educational and informational purposes only. The information provided on this platform is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified healthcare provider with any questions you may have regarding a medical condition or treatment.</p>
+                </div>
+
+                <!-- Section 5 -->
+                <div class="terms-section">
+                    <h2 style="color: #1e2b4f; margin-top: 2rem; margin-bottom: 1rem;"><i class="fas fa-check-circle" style="color: #2563eb;"></i> 5. Limitation of Liability</h2>
+                    <p>In no event shall Healthguard or its suppliers be liable for any damaged, including (without limitation) direct, indirect, incidental, consequential, special, exemplary damages, even if Healthguard has been notified of the possibility of such damages. This limitation of liability constitutes an essential part of this agreement.</p>
+                </div>
+
+                <!-- Section 6 -->
+                <div class="terms-section">
+                    <h2 style="color: #1e2b4f; margin-top: 2rem; margin-bottom: 1rem;"><i class="fas fa-check-circle" style="color: #2563eb;"></i> 6. Privacy & Data Protection</h2>
+                    <p>Your personal and health information is protected in accordance with applicable privacy laws and regulations. Healthguard implements industry-standard security measures to protect your data. We will never share your personal information with third parties without your explicit consent, except as required by law.</p>
+                </div>
+
+                <!-- Section 7 -->
+                <div class="terms-section">
+                    <h2 style="color: #1e2b4f; margin-top: 2rem; margin-bottom: 1rem;"><i class="fas fa-check-circle" style="color: #2563eb;"></i> 7. User Responsibilities</h2>
+                    <p>As a user of Healthguard, you agree to:</p>
+                    <ul style="margin-left: 2rem; color: #666;">
+                        <li>Provide accurate and complete information when creating your account</li>
+                        <li>Maintain the confidentiality of your account credentials</li>
+                        <li>Use the platform only for its intended purpose</li>
+                        <li>Comply with all applicable laws and regulations</li>
+                        <li>Not engage in any unlawful or harmful activities on the platform</li>
+                    </ul>
+                </div>
+
+                <!-- Section 8 -->
+                <div class="terms-section">
+                    <h2 style="color: #1e2b4f; margin-top: 2rem; margin-bottom: 1rem;"><i class="fas fa-check-circle" style="color: #2563eb;"></i> 8. Intellectual Property Rights</h2>
+                    <p>All content on Healthguard, including text, graphics, logos, images, and software, is the property of Healthguard or its content suppliers and is protected by international copyright laws. You may not reproduce, distribute, transmit, display, or publish any content from this platform without prior written permission.</p>
+                </div>
+
+                <!-- Section 9 -->
+                <div class="terms-section">
+                    <h2 style="color: #1e2b4f; margin-top: 2rem; margin-bottom: 1rem;"><i class="fas fa-check-circle" style="color: #2563eb;"></i> 9. Termination of Access</h2>
+                    <p>Healthguard reserves the right to terminate or suspend your account and access to the platform at any time, with or without cause, with or without notice. Violations of any of these terms and conditions will result in automatic termination of your account.</p>
+                </div>
+
+                <!-- Section 10 -->
+                <div class="terms-section">
+                    <h2 style="color: #1e2b4f; margin-top: 2rem; margin-bottom: 1rem;"><i class="fas fa-check-circle" style="color: #2563eb;"></i> 10. Governing Law</h2>
+                    <p>These terms and conditions are governed by and construed in accordance with the laws of the jurisdiction in which Healthguard operates, and you irrevocably submit to the exclusive jurisdiction of the courts located in that location.</p>
+                </div>
+
+                <!-- Contact Section -->
+                <div class="terms-section" style="background: #eff6ff; padding: 1.5rem; border-radius: 12px; border-left: 4px solid #2563eb; margin-top: 2rem;">
+                    <h3 style="color: #1e3a8a; margin-bottom: 1rem;"><i class="fas fa-envelope"></i> Questions?</h3>
+                    <p style="margin: 0;">If you have any questions about these Terms & Conditions, please contact us at:<br><strong>support@healthguard.com</strong> | <strong>+1-800-HEALTH-1</strong></p>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 2rem; justify-content: center;">
+                <button onclick="hideTermsConditions()" style="width: 200px; background: #8b5cf6;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ************ MEDICINE REMINDER MODAL ************ -->
+    <div id="medicineOverlay" class="hide"
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2999; backdrop-filter: blur(5px);">
+    </div>
+    <div id="medicineModal" class="glass-card hide"
+        style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 3000; text-align: center; border: 2px solid #dc2626; box-shadow: 0 0 50px rgba(220, 38, 38, 0.5); width: 90%; max-width: 400px; transition: 0.3s transform;">
+        <h2 style="color: #dc2626; margin-bottom: 1rem;"><i class="fas fa-bell fa-shake"></i> MEDICINE TIME!</h2>
+        <p id="medicineModalText" style="font-size: 1.2rem; font-weight: bold; margin-bottom: 2rem; color: #1e2b4f;">
+        </p>
+        <button id="medicineAcknowledgeBtn"
+            style="background: #10b981; color: white; border: none; width: 100%; font-size: 1.2rem; padding: 1rem; border-radius: 30px; cursor: pointer; font-weight: bold;">I
+            took it!</button>
+    </div>
+
+    <!-- ************ DOCTOR PROFILE MODAL ************ -->
+    <div id="doctorProfileOverlay" class="hide"
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2999; backdrop-filter: blur(5px);">
+    </div>
+    <div id="doctorProfileModal" class="glass-card hide"
+        style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 3000; width: 90%; max-width: 400px; max-height: 80vh; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h2 style="color: #1e2b4f; margin: 0;"><i class="fas fa-user-md"></i> Doctor Profile</h2>
+            <button id="closeDoctorProfileBtn"
+                style="background: transparent; color: #1e2b4f; box-shadow: none; font-size: 1.5rem; padding: 0.5rem; margin: 0; height: auto;"
+                title="Close"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="doctorProfileModalContent" class="profile-info text-left">
+            <!-- Profile info appended here -->
+        </div>
+    </div>
+
+    <!-- ************ DIRECT CHAT MODAL ************ -->
+    <div id="chatOverlay" class="hide"
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2999; backdrop-filter: blur(5px);">
+    </div>
+    <div id="chatModal" class="chatbot-window hide"
+        style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 3000; margin: 0; height: 500px; width: 400px; max-width: 90vw;">
+        <div class="chatbot-header">
+            <h3><i class="fas fa-user-md"></i> Chat with <span id="chatTargetName"></span></h3>
+            <button id="chatClose"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="chatMessages" class="chatbot-messages">
+            <!-- Messages go here -->
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="chatInput" placeholder="Type a message...">
+            <button id="chatSend"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <!-- ************ CHATBOT ************ -->
+    <div id="chatbotContainer" class="chatbot-container">
+        <button id="chatbotToggle" class="chatbot-toggle">
+            <i class="fas fa-comment-dots"></i>
+        </button>
+        <div id="chatbotWindow" class="chatbot-window hide">
+            <div class="chatbot-header">
+                <h3>🤖 HealthBot</h3>
+                <button id="chatbotClose"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="chatbotMessages" class="chatbot-messages">
+                <div class="bot-msg">Hello! I am HealthBot. How can I help you today?</div>
+            </div>
+            <div class="chatbot-input">
+                <input type="text" id="chatbotInput" placeholder="Type a message...">
+                <button id="chatbotSend"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="logic.js"></script>
+
+
+    <!-- ************************************* -->
+    <!-- MYSQL SCHEMA (for reference / future) -->
+    <!-- 
+    CREATE DATABASE hackhealth;
+    USE hackhealth;
+
+    CREATE TABLE users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        full_name VARCHAR(100) NOT NULL,
+        role ENUM('patient','doctor') NOT NULL,
+        -- common fields
+        phone VARCHAR(15),
+        email VARCHAR(100) UNIQUE NOT NULL,
+        password VARCHAR(255) NOT NULL,
+        -- patient specific
+        gender ENUM('Male','Female','Other'),
+        age INT,
+        emergency_contact VARCHAR(15),
+        -- doctor specific
+        specialization VARCHAR(100),
+        experience INT,
+        available_time VARCHAR(100),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE appointments (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        patient_id INT NOT NULL,
+        doctor_id INT NOT NULL,
+        issue TEXT,
+        appointment_date DATETIME,
+        status ENUM('pending','accepted','rejected','completed') DEFAULT 'pending',
+        FOREIGN KEY (patient_id) REFERENCES users(id),
+        FOREIGN KEY (doctor_id) REFERENCES users(id)
+    );
+
+    CREATE TABLE reminders (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        patient_id INT NOT NULL,
+        medicine_name VARCHAR(100),
+        reminder_time TIME,
+        FOREIGN KEY (patient_id) REFERENCES users(id)
+    );
+
+    -- optionally: emergency_alerts, hospital_list, etc.
+    -->
+
+        <!-- FOOTER -->
+        <footer class="footer-section">
+            <div class="footer-container">
+                <!-- Brand Section -->
+                <div class="footer-brand">
+                    <h3><i class="fas fa-hospital-user"></i> Healthguard</h3>
+                    <p>Your Trusted Healthcare Companion</p>
+                    <p class="footer-tagline"><i class="fas fa-shield-alt"></i> Secure • Private • Trusted</p>
+                </div>
+
+                <!-- Useful Pages -->
+                <div class="footer-column">
+                    <h4 class="footer-title">Useful Pages</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                        <li><a href="#"><i class="fas fa-user-md"></i> Find Doctors</a></li>
+                        <li><a href="#"><i class="fas fa-pills"></i> Medicine Reminder</a></li>
+                        <li><a href="#"><i class="fas fa-file-medical"></i> Reports</a></li>
+                        <li><a href="#"><i class="fas fa-scroll"></i> Government Schemes</a></li>
+                        <li><a href="#"><i class="fas fa-phone"></i> Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <!-- Emergency & Support -->
+                <div class="footer-column">
+                    <h4 class="footer-title">Emergency & Support</h4>
+                    <ul class="footer-links">
+                        <li><a href="tel:112"><i class="fas fa-phone-volume"></i> Emergency: 112</a></li>
+                        <li><a href="tel:108"><i class="fas fa-ambulance"></i> Ambulance: 108</a></li>
+                        <li><a href="#"><i class="fas fa-headset"></i> 24/7 Helpline</a></li>
+                        <li><a href="#"><i class="fas fa-comments"></i> Chat Support</a></li>
+                        <li><a href="#"><i class="fas fa-video"></i> Video Consultation</a></li>
+                    </ul>
+                </div>
+
+                <!-- Legal & Safety -->
+                <div class="footer-column">
+                    <h4 class="footer-title">Legal & Safety</h4>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-lock"></i> Privacy Policy</a></li>
+                        <li><a href="#"><i class="fas fa-file-contract"></i> Terms of Service</a></li>
+                        <li><a href="#"><i class="fas fa-info-circle"></i> Disclaimer</a></li>
+                    </ul>
+                    <div class="footer-disclaimer">
+                        <p><i class="fas fa-exclamation-triangle"></i> HealthGuard does not provide medical diagnosis. Always consult a qualified doctor.</p>
+                    </div>
+                </div>
+
+                <!-- Social Links -->
+                <div class="footer-column">
+                    <h4 class="footer-title">Follow Us</h4>
+                    <div class="footer-social">
+                        <a href="https://wa.me/+919999999999" class="social-link whatsapp" title="WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>WhatsApp</span>
+                        </a>
+                        <a href="mailto:support@healthguard.com" class="social-link email" title="Email">
+                            <i class="fas fa-envelope"></i>
+                            <span>Email</span>
+                        </a>
+                        <a href="https://twitter.com" class="social-link twitter" title="Twitter">
+                            <i class="fab fa-twitter"></i>
+                            <span>Twitter</span>
+                        </a>
+                        <a href="https://facebook.com" class="social-link facebook" title="Facebook">
+                            <i class="fab fa-facebook"></i>
+                            <span>Facebook</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <p>&copy; 2026 Healthguard. All rights reserved. | Made with <i class="fas fa-heart"></i> for your health</p>
+            </div>
+        </footer>
+</body>
+
+</html>
