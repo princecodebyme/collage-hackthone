@@ -845,7 +845,121 @@
     // Start checker on load
     startReminderCheck();
 
-    // ----- CHATBOT LOGIC -----
+    // ----- DISEASE & SYMPTOM DATABASE -----
+    const diseaseDatabase = {
+        'flu': { name: 'Influenza (Flu)', symptoms: 'fever, cough, body ache, fatigue', medicines: ['aspirin', 'paracetamol'], advice: 'Rest, stay hydrated, avoid contact with others' },
+        'cold': { name: 'Common Cold', symptoms: 'runny nose, cough, sneezing, sore throat', medicines: ['cough syrup', 'paracetamol'], advice: 'Drink warm liquids, rest, use tissues' },
+        'headache': { name: 'Headache', symptoms: 'head pain', medicines: ['aspirin', 'paracetamol', 'ibuprofen'], advice: 'Rest in dark room, drink water, apply cold compress' },
+        'fever': { name: 'Fever', symptoms: 'high temperature, chills, body ache', medicines: ['paracetamol', 'ibuprofen'], advice: 'Stay hydrated, rest, take cool baths' },
+        'allergies': { name: 'Allergies', symptoms: 'itching, sneezing, runny nose, rash', medicines: ['antihistamine'], advice: 'Avoid allergens, use air purifier' },
+        'cough': { name: 'Cough', symptoms: 'persistent cough, throat irritation', medicines: ['cough syrup'], advice: 'Drink honey with warm milk, avoid cold drinks' },
+        'arthritis': { name: 'Arthritis', symptoms: 'joint pain, inflammation, stiffness', medicines: ['ibuprofen', 'calcium'], advice: 'Exercise regularly, physical therapy, warm baths' },
+        'diabetes': { name: 'Diabetes', symptoms: 'increased thirst, frequent urination', medicines: ['insulin'], advice: 'Regular exercise, balanced diet, monitor blood sugar' }
+    };
+
+    // Medicine interactions database
+    const medicineInteractions = {
+        'aspirin': ['ibuprofen', 'antihistamine'],
+        'ibuprofen': ['aspirin'],
+        'paracetamol': [],
+        'vitamin d': ['calcium']
+    };
+
+    // ----- MEDICINE DATABASE -----
+    const medicineDatabase = {
+        'aspirin': {
+            name: 'Aspirin',
+            uses: 'Pain relief, fever, inflammation, heart conditions',
+            dosage: '300-500mg every 4-6 hours (max 3000mg/day)',
+            sideEffects: 'Stomach upset, heartburn, increased bleeding risk',
+            precautions: 'Do not use if allergic, pregnant, or on blood thinners. Take with food.',
+            price: '₹20-50',
+            type: 'NSAID'
+        },
+        'paracetamol': {
+            name: 'Paracetamol (Acetaminophen)',
+            uses: 'Fever, headache, mild to moderate pain',
+            dosage: '500-1000mg every 4-6 hours (max 3000-4000mg/day)',
+            sideEffects: 'Usually well-tolerated. Overdose can cause liver damage.',
+            precautions: 'Avoid if liver disease. Do not exceed recommended dose.',
+            price: '₹15-40',
+            type: 'Analgesic'
+        },
+        'ibuprofen': {
+            name: 'Ibuprofen',
+            uses: 'Pain relief, fever, inflammation, arthritis',
+            dosage: '400-600mg every 4-6 hours (max 2400mg/day)',
+            sideEffects: 'Stomach pain, ulcers, dizziness, heartburn',
+            precautions: 'Take with food. Avoid if kidney disease or asthma. Not for pregnancy.',
+            price: '₹30-80',
+            type: 'NSAID'
+        },
+        'cough syrup': {
+            name: 'Common Cough Syrup',
+            uses: 'Dry cough, wet cough, throat irritation',
+            dosage: '5-10ml every 6-8 hours',
+            sideEffects: 'Drowsiness, dizziness, mild nausea',
+            precautions: 'Do not drive after use. Not for children under 2 years.',
+            price: '₹80-150',
+            type: 'Expectorant'
+        },
+        'vitamin d': {
+            name: 'Vitamin D',
+            uses: 'Bone health, immunity, depression, calcium absorption',
+            dosage: '1000-2000 IU daily (consult doctor for higher doses)',
+            sideEffects: 'Generally safe. High doses can cause toxicity.',
+            precautions: 'Get blood test before supplementing. Combine with calcium.',
+            price: '₹100-300',
+            type: 'Vitamin'
+        },
+        'calcium': {
+            name: 'Calcium Supplement',
+            uses: 'Bone strength, teeth health, muscle function',
+            dosage: '1000-1200mg daily (in divided doses)',
+            sideEffects: 'Constipation, bloating, kidney stones if excessive',
+            precautions: 'Take with food. Drink plenty of water. Consult before use.',
+            price: '₹150-400',
+            type: 'Mineral'
+        },
+        'multivitamin': {
+            name: 'Multivitamin Tablet',
+            uses: 'Overall wellness, immunity, energy, nutrient deficiency',
+            dosage: '1 tablet daily (preferably with breakfast)',
+            sideEffects: 'Rare. May cause upset stomach if taken empty.',
+            precautions: 'Take with food. Do not exceed recommended dose.',
+            price: '₹200-500',
+            type: 'Supplement'
+        },
+        'antibiotics': {
+            name: 'Antibiotics (Amoxicillin Example)',
+            uses: 'Bacterial infections, ear infection, sore throat',
+            dosage: '250-500mg three times daily (as prescribed)',
+            sideEffects: 'Nausea, diarrhea, allergic reactions, rash',
+            precautions: 'Complete full course. Avoid if allergic. May interact with other drugs.',
+            price: '₹50-200',
+            type: 'Antibiotic'
+        },
+        'antihistamine': {
+            name: 'Antihistamine (for Allergies)',
+            uses: 'Allergies, itching, hives, runny nose',
+            dosage: '5-10mg once or twice daily',
+            sideEffects: 'Drowsiness, dry mouth, dizziness',
+            precautions: 'Do not drive. May interact with alcohol.',
+            price: '₹40-100',
+            type: 'Antihistamine'
+        },
+        'insulin': {
+            name: 'Insulin',
+            uses: 'Diabetes management, blood sugar control',
+            dosage: 'As prescribed by doctor (varies by type)',
+            sideEffects: 'Low blood sugar, injection site reactions',
+            precautions: 'Must be prescribed. Regular monitoring required.',
+            price: '₹500-3000',
+            type: 'Hormone'
+        }
+    };
+
+    // ----- CHATBOT LOGIC (IMPROVED WITH MEDICINE AI) -----
     const chatbotToggle = document.getElementById('chatbotToggle');
     const chatbotWindow = document.getElementById('chatbotWindow');
     const chatbotClose = document.getElementById('chatbotClose');
@@ -853,44 +967,248 @@
     const chatbotSend = document.getElementById('chatbotSend');
     const chatbotMessages = document.getElementById('chatbotMessages');
 
+    const chatbotResponses = {
+        greetings: {
+            keywords: ['hello', 'hi', 'hey', 'greetings', 'namaste', 'good morning', 'good afternoon', 'good evening'],
+            responses: [
+                "👋 Hello! Welcome to Healthguard. How can I assist you with your healthcare needs today?",
+                "Hey there! 😊 Ready to take charge of your health? What can I help you with?",
+                "Greetings! I'm here to make your healthcare journey smooth and easy."
+            ]
+        },
+        appointment: {
+            keywords: ['appointment', 'book', 'consult', 'doctor', 'schedule'],
+            responses: [
+                "📅 Sure! I can help you book an appointment. Here's how:\n\n1️⃣ Go to 'Find a Doctor' section\n2️⃣ Select your health concern\n3️⃣ Choose a specialist\n4️⃣ Pick a convenient time\n5️⃣ Confirm booking\n\nWould you like to book right now?"
+            ]
+        },
+        emergency: {
+            keywords: ['emergency', 'urgent', 'sos', 'critical', 'danger', 'hospital', 'ambulance'],
+            responses: [
+                "🚨 EMERGENCY DETECTED!\n\n⚠️ If this is a REAL medical emergency:\n• Press the RED 'SOS EMERGENCY' button on your dashboard\n• Call 🚨 112 (Police)\n• Call 🚑 108 (Ambulance)\n• Go to nearest hospital immediately\n\nDo not delay! Your safety is our priority."
+            ]
+        },
+        medicine: {
+            keywords: ['medicine', 'medication', 'drug', 'tablet', 'pill', 'reminder', 'dosage'],
+            responses: [
+                "💊 Medicine Management Made Easy!\n\n✅ Our medicine reminder system helps you:\n• Add medicines with dosage info\n• Set specific reminder times\n• Get notifications/alerts\n• Track your medications\n\nGo to 'Medicine Reminders' section on your dashboard to start adding medicines!"
+            ]
+        },
+        doctors: {
+            keywords: ['doctor', 'specialist', 'physician', 'cardiologist', 'dermatologist', 'find'],
+            responses: [
+                "👨‍⚕️ Our Available Specialists:\n\n🏥 General Physician - For routine check-ups\n❤️ Cardiologist - Heart & cardiovascular issues\n🧴 Dermatologist - Skin & beauty concerns\n👶 Pediatrician - Child health & development\n\nEach doctor is verified and available for online/offline consultation. Want to book now?"
+            ]
+        },
+        profile: {
+            keywords: ['profile', 'account', 'personal', 'information', 'edit'],
+            responses: [
+                "👤 Your Profile Management:\n\n✏️ View your health profile\n📋 Update personal information\n📝 Set health goals\n🔐 Manage privacy settings\n\nYou can access this in the 'My Health & Profile' section. Keep your info updated for better healthcare!"
+            ]
+        },
+        health_tips: {
+            keywords: ['tip', 'advice', 'health', 'wellness', 'fitness', 'exercise', 'diet'],
+            responses: [
+                "🏃 Quick Health Tips:\n\n💧 Drink 8 glasses of water daily\n🥗 Eat vegetables & fruits\n😴 Get 7-8 hours of sleep\n🚶 Walk 10,000 steps daily\n😊 Practice daily meditation\n\nSmall changes, big health improvements! 💪"
+            ]
+        },
+        privacy: {
+            keywords: ['privacy', 'secure', 'safe', 'data', 'confidential', 'protection'],
+            responses: [
+                "🔒 Your Privacy & Security:\n\n✅ All data stored locally (browser)\n🔐 End-to-end encryption\n🚫 No external servers involved\n📱 Your info stays with you\n🛡️ HIPAA compliant design\n\nYour health is your private matter. We respect that completely!"
+            ]
+        },
+        schemes: {
+            keywords: ['scheme', 'government', 'ayushman', 'pm-jay', 'health', 'insurance'],
+            responses: [
+                "🏛️ Government Health Schemes:\n\n🎯 PM-JAY - ₹5 lakh free treatment\n💰 PMJJBY - Low-cost life insurance\n🏥 AB-HWCs - Health wellness centers\n📋 Check our 'Health Schemes' section for details\n\nBenefit from government health programs! Link them to your profile."
+            ]
+        },
+        help: {
+            keywords: ['help', 'support', 'how', 'tutorial', 'guide', 'explain'],
+            responses: [
+                "📞 Need Help? Here's What I Can Do:\n\n✅ Help with appointments\n✅ Emergency assistance\n✅ Medicine information & recommendations\n✅ Find doctors\n✅ Health tips & advice\n✅ Privacy information\n✅ Explain features\n\nJust ask me anything! If I can't help, contact support@healthguard.com"
+            ]
+        }
+    };
+
     if (chatbotToggle && chatbotWindow) {
         chatbotToggle.addEventListener('click', () => {
             chatbotWindow.classList.toggle('hide');
+            chatbotInput.focus();
         });
 
         chatbotClose.addEventListener('click', () => {
             chatbotWindow.classList.add('hide');
         });
 
-        function addChatMessage(text, sender) {
+        function addChatMessage(text, sender, hasQuickActions = false) {
             const msgDiv = document.createElement('div');
             msgDiv.classList.add(sender === 'bot' ? 'bot-msg' : 'user-msg');
-            msgDiv.innerText = text;
+            msgDiv.innerHTML = text.replace(/\n/g, '<br>');
             chatbotMessages.appendChild(msgDiv);
             chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
         }
 
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing-indicator';
+            typingDiv.id = 'typing-indicator';
+            typingDiv.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+            chatbotMessages.appendChild(typingDiv);
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const typing = document.getElementById('typing-indicator');
+            if (typing) typing.remove();
+        }
+
+        // Medicine Information Lookup
+        function getMedicineInfo(medicineName) {
+            const medicine = medicineDatabase[medicineName.toLowerCase()];
+            if (medicine) {
+                return `💊 <strong>${medicine.name}</strong>\n\n` +
+                    `📋 <strong>Uses:</strong> ${medicine.uses}\n` +
+                    `💊 <strong>Dosage:</strong> ${medicine.dosage}\n` +
+                    `⚠️ <strong>Side Effects:</strong> ${medicine.sideEffects}\n` +
+                    `🛡️ <strong>Precautions:</strong> ${medicine.precautions}\n` +
+                    `💰 <strong>Price Range:</strong> ${medicine.price}\n\n` +
+                    `⚕️ <strong>Important:</strong> Always consult a doctor before taking any medicine!`;
+            }
+            return null;
+        }
+
+        // Get list of available medicines
+        function getAvailableMedicines() {
+            const list = Object.keys(medicineDatabase).map(key => medicineDatabase[key].name);
+            return "💊 <strong>Available Medicines in Database:</strong>\n\n" + 
+                list.map(m => `• ${m}`).join('\n') + 
+                "\n\n🔍 Just ask me about any medicine above for detailed information!";
+        }
+
+        // Disease/Symptom Recognition
+        function recognizeDisease(text) {
+            for (const [disease, data] of Object.entries(diseaseDatabase)) {
+                if (text.includes(disease)) {
+                    return { disease, data };
+                }
+            }
+            return null;
+        }
+
+        // Get disease recommendations
+        function getDiseaseRecommendation(disease, data) {
+            let response = `🏥 <strong>Possible Condition: ${data.name}</strong>\n\n`;
+            response += `🔍 <strong>Common Symptoms:</strong> ${data.symptoms}\n\n`;
+            response += `💊 <strong>Suggested Medicines:</strong>\n`;
+            
+            data.medicines.forEach(med => {
+                const medicine = medicineDatabase[med];
+                if (medicine) {
+                    response += `• ${medicine.name} - ${medicine.uses}\n`;
+                }
+            });
+            
+            response += `\n💡 <strong>Quick Advice:</strong> ${data.advice}\n\n`;
+            response += `⚠️ <strong>Important:</strong> This is not a diagnosis. Please consult a doctor for proper evaluation!\n`;
+            response += `📞 Click "Book an Appointment" to consult a specialist.`;
+            
+            return response;
+        }
+
+        // Check medicine interactions
+        function checkMedicineInteractions(medicineName) {
+            const interactions = medicineInteractions[medicineName.toLowerCase()];
+            if (interactions && interactions.length > 0) {
+                return `⚠️ <strong>Drug Interactions:</strong>\n${interactions.map(m => `• Do not take with ${m.toUpperCase()}`).join('\n')}\n\nConsult your doctor before combining medicines!`;
+            }
+            return null;
+        }
+
+        // Get all available diseases
+        function getAvailableDiseases() {
+            const list = Object.keys(diseaseDatabase).map(key => diseaseDatabase[key].name);
+            return "🏥 <strong>Recognizable Health Conditions:</strong>\n\n" + 
+                list.map(d => `• ${d}`).join('\n') + 
+                "\n\n🔍 Describe your symptoms and I'll provide recommendations!";
+        }
+
         function handleChatbotResponse(userText) {
             const text = userText.toLowerCase();
-            let response = "I'm sorry, I didn't understand that. You can ask me about 'appointment', 'emergency', 'doctors', or 'profile'.";
+            let response = "😕 I didn't quite understand that. Could you rephrase or use one of my quick actions?\n\n📝 Try asking about: Medicine • Disease • Symptoms • Appointment • Emergency";
+            let found = false;
 
-            if (text.includes('hello') || text.includes('hi')) {
-                response = "Hello! How can I assist you with Healthguard today?";
-            } else if (text.includes('appointment') || text.includes('book')) {
-                response = "To book an appointment, go to the 'Consult a Doctor' section on your dashboard, select an issue, and find a doctor.";
-            } else if (text.includes('emergency') || text.includes('sos')) {
-                response = "If this is a medical emergency, please click the red SOS EMERGENCY button on your dashboard immediately!";
-            } else if (text.includes('doctor')) {
-                response = "We have General Physicians, Cardiologists, Dermatologists, and Pediatricians available.";
-            } else if (text.includes('reminder') || text.includes('medicine')) {
-                response = "You can add medicine reminders directly from your dashboard.";
-            } else if (text.includes('profile')) {
-                response = "Your profile information is displayed on your dashboard. You can click 'Edit' to update it.";
+            // Check for emergency keywords first
+            if (text.includes('emergency') || text.includes('urgent') || text.includes('sos')) {
+                response = chatbotResponses.emergency.responses[0];
+                found = true;
             }
 
+            // Check if user is asking for medicines list
+            if (!found && (text.includes('what medicine') || text.includes('which medicine') || text.includes('available medicine') || text.includes('list medicine') || text.includes('all medicine'))) {
+                response = getAvailableMedicines();
+                found = true;
+            }
+
+            // Check if user is asking for diseases list
+            if (!found && (text.includes('what condition') || text.includes('what disease') || text.includes('available disease') || text.includes('recognizable condition') || text.includes('list disease'))) {
+                response = getAvailableDiseases();
+                found = true;
+            }
+
+            // Check if user is asking about a specific medicine
+            if (!found) {
+                for (const medicineName of Object.keys(medicineDatabase)) {
+                    if (text.includes(medicineName)) {
+                        const info = getMedicineInfo(medicineName);
+                        const interactions = checkMedicineInteractions(medicineName);
+                        response = info + (interactions ? `\n\n${interactions}` : '');
+                        found = true;
+                        break;
+                    }
+                }
+            }
+
+            // Check if user is describing symptoms or diseases
+            if (!found) {
+                const diseaseMatch = recognizeDisease(text);
+                if (diseaseMatch) {
+                    response = getDiseaseRecommendation(diseaseMatch.disease, diseaseMatch.data);
+                    found = true;
+                }
+            }
+
+            // Check for general symptom keywords
+            if (!found) {
+                const symptomKeywords = ['symptom', 'pain', 'ache', 'fever', 'cough', 'cold', 'throat', 'headache', 'sick', 'feeling', 'hurt'];
+                if (symptomKeywords.some(kw => text.includes(kw))) {
+                    response = "🏥 <strong>Symptom Checker:</strong>\n\nI can help identify possible conditions. Please tell me:\n" +
+                        "• Your main symptom\n" +
+                        "• How long you've had it\n" +
+                        "• Any other symptoms\n\n" +
+                        "Example: 'I have fever, cough and body ache' or 'My head hurts for 2 days'\n\n" +
+                        "Or describe your condition and I'll suggest suitable medicines!";
+                    found = true;
+                }
+            }
+
+            // Check general categories
+            if (!found) {
+                for (const [category, data] of Object.entries(chatbotResponses)) {
+                    if (data.keywords.some(keyword => text.includes(keyword))) {
+                        response = data.responses[Math.floor(Math.random() * data.responses.length)];
+                        found = true;
+                        break;
+                    }
+                }
+            }
+
+            showTypingIndicator();
             setTimeout(() => {
+                removeTypingIndicator();
                 addChatMessage(response, 'bot');
-            }, 500);
+            }, 1000 + Math.random() * 500);
         }
 
         chatbotSend.addEventListener('click', () => {
@@ -908,6 +1226,18 @@
             }
         });
     }
+
+    // Quick action handler for chatbot buttons
+    window.chatbotQuickAction = function(action) {
+        const actions = {
+            'appointment': '📅 I want to book an appointment',
+            'emergency': '🚨 I need emergency help',
+            'medicine': '💊 Tell me about medicines',
+            'doctors': '👨‍⚕️ Find a doctor'
+        };
+        chatbotInput.value = actions[action] || '';
+        chatbotSend.click();
+    };
 
     // ----- SLIDER / TAB LOGIC -----
     const slideTabs = document.querySelectorAll('.slide-tab');

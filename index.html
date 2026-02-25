@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    <div id="app">
+    <!-- <div id="app"> -->
         <!-- Global Navigation Bar -->
         <nav class="top-nav glass-card"
             style="margin-bottom: 2rem; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; border-radius: 20px;">
@@ -521,14 +521,23 @@
         </button>
         <div id="chatbotWindow" class="chatbot-window hide">
             <div class="chatbot-header">
-                <h3>🤖 HealthBot</h3>
+                <h3><i class="fas fa-robot"></i> HealthBot Assistant</h3>
                 <button id="chatbotClose"><i class="fas fa-times"></i></button>
             </div>
             <div id="chatbotMessages" class="chatbot-messages">
-                <div class="bot-msg">Hello! I am HealthBot. How can I help you today?</div>
+                <div class="bot-msg"><strong>👋 Welcome!</strong><br>I'm HealthBot, your AI healthcare assistant. I can help you with appointments, medicines, emergencies, and health information. What would you like to do?</div>
+                <div class="bot-msg" style="margin-top: 0.5rem;">
+                    <strong>Quick options:</strong>
+                    <div class="quick-actions">
+                        <button class="quick-action-btn" onclick="window.chatbotQuickAction('appointment')">📅 Book an Appointment</button>
+                        <button class="quick-action-btn" onclick="window.chatbotQuickAction('emergency')">🚨 Emergency Help</button>
+                        <button class="quick-action-btn" onclick="window.chatbotQuickAction('medicine')">💊 Medicine Info</button>
+                        <button class="quick-action-btn" onclick="window.chatbotQuickAction('doctors')">👨‍⚕️ Find Doctors</button>
+                    </div>
+                </div>
             </div>
             <div class="chatbot-input">
-                <input type="text" id="chatbotInput" placeholder="Type a message...">
+                <input type="text" id="chatbotInput" placeholder="Ask me anything...">
                 <button id="chatbotSend"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
